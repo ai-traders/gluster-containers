@@ -1,18 +1,15 @@
 FROM centos:7
 
-MAINTAINER Humble Chirammal hchiramm@redhat.com Mohamed Ashiq Liyazudeen mliyazud@redhat.com
+MAINTAINER Tomasz Setkowski <tom@ai-traders.com>
 
 ENV container docker
-
+ENV package_version=3.12.4-1.el7
 LABEL architecture="x86_64" \
       name="gluster/gluster-centos" \
-      version="3.10" \
+      version="3.12" \
       vendor="Red Hat, Inc" \
-      summary="This image has a running glusterfs service ( CentOS 7 + Gluster 3.10)" \
-      io.k8s.display-name="Gluster 3.10 based on CentOS 7" \
-      io.k8s.description="Gluster Image is based on CentOS Image which is a scalable network filesystem. Using common off-the-shelf hardware, you can create large, distributed storage solutions for media streaming, data analysis, and other data- and bandwidth-intensive tasks." \
-      description="Gluster Image is based on CentOS Image which is a scalable network filesystem. Using common off-the-shelf hardware, you can create large, distributed storage solutions for media streaming, data analysis, and other data- and bandwidth-intensive tasks." \
-      io.openshift.tags="gluster,glusterfs,glusterfs-centos"
+      summary="This image has a running glusterfs service ( CentOS 7 + Gluster 3.12)" \
+      io.k8s.display-name="Gluster 3.12 based on CentOS 7"
 
 RUN yum --setopt=tsflags=nodocs -y update; yum install -y centos-release-gluster; yum clean all; \
 (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
@@ -23,7 +20,7 @@ rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
 rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
 rm -f /lib/systemd/system/basic.target.wants/*;\
 rm -f /lib/systemd/system/anaconda.target.wants/*;\
-yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs glusterfs-server glusterfs-rdma glusterfs-geo-replication;yum clean all; \
+yum --setopt=tsflags=nodocs -y install nfs-utils attr iputils iproute openssh-server openssh-clients ntp rsync tar cronie sudo xfsprogs glusterfs-${package_version} glusterfs-server-${package_version};yum clean all; \
 sed -i '/Defaults    requiretty/c\#Defaults    requiretty' /etc/sudoers; \
 sed -i '/Port 22/c\Port 2222' /etc/ssh/sshd_config; \
 sed -i 's/Requires\=rpcbind\.service//g' /usr/lib/systemd/system/glusterd.service; \
