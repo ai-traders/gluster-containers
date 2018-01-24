@@ -1,0 +1,6 @@
+#!/bin/bash
+
+ulimit -u 65536
+LOG_LEVEL=INFO
+source /etc/sysconfig/glusterd
+exec /usr/sbin/glusterd --no-daemon -p /var/run/glusterd.pid  --log-level $LOG_LEVEL $GLUSTERD_OPTIONS

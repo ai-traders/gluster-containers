@@ -1,0 +1,11 @@
+#!/bin/bash
+
+if [ -f $GLUSTERFS_CUSTOM_FSTAB ]
+then
+    cut -f 2 -d " " $GLUSTERFS_CUSTOM_FSTAB | while read -r dest_dir
+    do
+        umount $dest_dir
+    done
+fi
+
+s6-svscanctl -t /var/run/s6/services
